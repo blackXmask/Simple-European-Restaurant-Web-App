@@ -10,10 +10,10 @@ const { initDatabase } = require('./config/database');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ── Database (async init) ─────────────────────────────────
-let dbReady = false;
-initDatabase().then(() => { dbReady = true; }).catch(err => {
+// ── Database (async init — store promise so requests can await it) ──
+const dbPromise = initDatabase().catch(err => {
   console.error('[DB] Init failed:', err.message);
+  throw err;
 });
 
 // ── View Engine ────────────────────────────────────────────
@@ -39,6 +39,17 @@ app.use(session({
   },
 }));
 
+// ── Await DB before handling any request ──────────────────
+app.use(async (req, res, next) => {
+  try {
+    await dbPromise;
+    next();
+  } catch (err) {
+    console.error('[DB] Still failing:', err.message);
+    res.status(503).send('Database connection failed. Please check environment variables.');
+  }
+});
+
 // ── Global Locals ──────────────────────────────────────────
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
@@ -53,14 +64,6 @@ app.use((req, res, next) => {
   };
   res.locals.flash = req.session.flash || null;
   req.session.flash = null;
-  next();
-});
-
-// ── DB readiness guard ────────────────────────────────────
-app.use((req, res, next) => {
-  if (!dbReady) {
-    return res.status(503).send('Database is initializing, please try again in a moment.');
-  }
   next();
 });
 
@@ -100,7 +103,7 @@ app.use((err, req, res, next) => {
 module.exports = app;
 
 // ── Start server (local only) ────────────────────────────
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`\n  La Maison Dorée — running on http://localhost:${PORT}`);
     console.log(`  Admin login: ${process.env.ADMIN_EMAIL || 'admin@lamaisondoree.com'} / ${process.env.ADMIN_PASSWORD || 'admin123'}\n`);
