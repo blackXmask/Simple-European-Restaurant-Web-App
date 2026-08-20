@@ -1,0 +1,69 @@
+<%- include('../../partials/admin-head') %>
+
+<div class="admin-header">
+  <h1>Review Moderation</h1>
+</div>
+
+<!-- Status Filter -->
+<div class="admin-filters" style="margin-bottom: 24px;">
+  <a href="/admin/reviews" class="admin-filter-btn <%= activeStatus === 'all' ? 'active' : '' %>">All (<%= statusCounts.pending + statusCounts.approved + statusCounts.rejected %>)</a>
+  <a href="/admin/reviews?status=pending" class="admin-filter-btn <%= activeStatus === 'pending' ? 'active' : '' %>">Pending (<%= statusCounts.pending %>)</a>
+  <a href="/admin/reviews?status=approved" class="admin-filter-btn <%= activeStatus === 'approved' ? 'active' : '' %>">Approved (<%= statusCounts.approved %>)</a>
+  <a href="/admin/reviews?status=rejected" class="admin-filter-btn <%= activeStatus === 'rejected' ? 'active' : '' %>">Rejected (<%= statusCounts.rejected %>)</a>
+</div>
+
+<div class="admin-table-card">
+  <% if (reviews.length === 0) { %>
+    <div style="text-align: center; padding: 48px; color: var(--gray);">
+      <i class="fas fa-star" style="font-size: 3rem; opacity: 0.3; margin-bottom: 12px;"></i>
+      <p>No reviews found.</p>
+    </div>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Reviewer</th>
+          <th>Rating</th>
+          <th>Review</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% reviews.forEach(function(review) { %>
+          <tr>
+            <td>
+              <strong><%= review.user_name %></strong>
+            </td>
+            <td>
+              <span class="stars-readonly">
+                <% for (let i = 1; i <= 5; i++) { %><%= i <= review.rating ? '★' : '☆' %><% } %>
+              </span>
+            </td>
+            <td style="max-width: 400px;">
+              <% if (review.title) { %><strong><%= review.title %></strong><br><% } %>
+              <span style="color: var(--gray); font-size: 0.85rem;"><%= review.comment %></span>
+            </td>
+            <td><span class="status-badge status-<%= review.status %>"><%= review.status %></span></td>
+            <td><%= new Date(review.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) %></td>
+            <td>
+              <div class="admin-action-btns">
+                <form action="/admin/reviews/<%= review.id %>/status?_method=PUT" method="POST" style="display: inline;">
+                  <input type="hidden" name="status" value="approved">
+                  <button type="submit" class="action-btn action-btn-approve" title="Approve"><i class="fas fa-check"></i></button>
+                </form>
+                <form action="/admin/reviews/<%= review.id %>/status?_method=PUT" method="POST" style="display: inline;">
+                  <input type="hidden" name="status" value="rejected">
+                  <button type="submit" class="action-btn action-btn-reject" title="Reject"><i class="fas fa-times"></i></button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('../../partials/admin-footer') %>

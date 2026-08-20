@@ -1,0 +1,81 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<section class="order-detail-page">
+  <div class="container">
+    <div class="order-detail-card">
+      <div class="order-detail-header">
+        <div>
+          <h2>Order <%= order.order_number %></h2>
+          <p style="color: var(--gray); font-size: 0.9rem;"><%= new Date(order.created_at).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></p>
+        </div>
+        <span class="status-badge status-<%= order.status %>"><%= order.status %></span>
+      </div>
+
+      <div class="order-info-grid">
+        <div class="order-info-item">
+          <div class="label">Customer Name</div>
+          <div class="value"><%= order.customer_name %></div>
+        </div>
+        <div class="order-info-item">
+          <div class="label">Phone</div>
+          <div class="value"><%= order.customer_phone %></div>
+        </div>
+        <div class="order-info-item">
+          <div class="label">Email</div>
+          <div class="value"><%= order.customer_email %></div>
+        </div>
+        <div class="order-info-item">
+          <div class="label">Delivery Type</div>
+          <div class="value"><%= order.delivery_type === 'pickup' ? 'Pickup' : 'Delivery' %></div>
+        </div>
+        <% if (order.delivery_address) { %>
+          <div class="order-info-item">
+            <div class="label">Delivery Address</div>
+            <div class="value"><%= order.delivery_address %></div>
+          </div>
+        <% } %>
+        <% if (order.notes) { %>
+          <div class="order-info-item">
+            <div class="label">Notes</div>
+            <div class="value"><%= order.notes %></div>
+          </div>
+        <% } %>
+      </div>
+
+      <table class="order-items-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th style="text-align: center;">Quantity</th>
+            <th style="text-align: right;">Price</th>
+            <th style="text-align: right;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(function(item) { %>
+            <tr>
+              <td><%= item.name %></td>
+              <td style="text-align: center;"><%= item.quantity %></td>
+              <td style="text-align: right;">&euro;<%= item.price.toFixed(2) %></td>
+              <td class="item-total">&euro;<%= (item.price * item.quantity).toFixed(2) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align: right; padding-top: 16px; font-weight: 700; border-top: 2px solid var(--gray-lighter);">Total</td>
+            <td style="text-align: right; padding-top: 16px; font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--burgundy); border-top: 2px solid var(--gray-lighter);">&euro;<%= order.total %></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div style="display: flex; gap: 12px;">
+      <a href="/orders" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to Orders</a>
+      <a href="/menu" class="btn btn-primary"><i class="fas fa-utensils"></i> Order Again</a>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

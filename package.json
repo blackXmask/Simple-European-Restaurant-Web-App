@@ -1,0 +1,36 @@
+{
+  "name": "la-maison-doree",
+  "version": "1.0.0",
+  "description": "La Maison Dorée — Elegant European Restaurant Web Application with online ordering, reviews, and admin panel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "init-db": "node config/database.js"
+  },
+  "keywords": [
+    "restaurant",
+    "european",
+    "ordering",
+    "reviews",
+    "express",
+    "ejs"
+  ],
+  "author": "La Maison Dorée",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.3.0",
+    "connect-sqlite3": "^0.9.15",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.0",
+    "method-override": "^3.0.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

@@ -1,0 +1,70 @@
+<%- include('../../partials/admin-head') %>
+
+<div class="admin-header">
+  <h1><%= item ? 'Edit Menu Item' : 'Add Menu Item' %></h1>
+  <a href="/admin/menu" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Back to Menu</a>
+</div>
+
+<div class="admin-form-card">
+  <form action="<%= item ? '/admin/menu/' + item.id + '?_method=PUT' : '/admin/menu' %>" method="POST">
+    <div class="form-group">
+      <label>Dish Name</label>
+      <input type="text" name="name" class="form-control" value="<%= item ? item.name : '' %>" placeholder="e.g. Coq au Vin" required>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" class="form-control" rows="3" placeholder="Describe the dish, its ingredients and preparation..."><%= item ? item.description : '' %></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price (&euro;)</label>
+        <input type="number" name="price" class="form-control" value="<%= item ? item.price : '' %>" step="0.01" min="0" placeholder="18.50" required>
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select name="categoryId" class="form-control" required>
+          <% categories.forEach(function(cat) { %>
+            <option value="<%= cat.id %>" <%= item && item.category_id == cat.id ? 'selected' : '' %>><%= cat.name %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Image URL</label>
+      <input type="url" name="imageUrl" class="form-control" value="<%= item ? item.image_url : '' %>" placeholder="https://images.unsplash.com/...">
+      <p class="form-hint">Paste a direct image URL (recommended: Unsplash, 800px+ width)</p>
+    </div>
+
+    <% if (item && item.image_url) { %>
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">Current Image</label>
+        <img src="<%= item.image_url %>" alt="<%= item.name %>" style="width: 200px; height: 130px; object-fit: cover; border-radius: var(--radius-sm);">
+      </div>
+    <% } %>
+
+    <div class="form-group">
+      <label>Sort Order</label>
+      <input type="number" name="sortOrder" class="form-control" value="<%= item ? item.sort_order : 0 %>" min="0" style="width: 100px;">
+      <p class="form-hint">Lower numbers appear first within their category.</p>
+    </div>
+
+    <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+      <div class="checkbox-group">
+        <input type="checkbox" name="isAvailable" id="isAvailable" <%= !item || item.is_available ? 'checked' : '' %>>
+        <label for="isAvailable" style="font-weight: 600; cursor: pointer;">Available on menu</label>
+      </div>
+      <div class="checkbox-group">
+        <input type="checkbox" name="isFeatured" id="isFeatured" <%= item && item.is_featured ? 'checked' : '' %>>
+        <label for="isFeatured" style="font-weight: 600; cursor: pointer;">Featured dish</label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save"></i> <%= item ? 'Update Item' : 'Create Item' %></button>
+    <a href="/admin/menu" class="btn btn-outline" style="margin-left: 8px;">Cancel</a>
+  </form>
+</div>
+
+<%- include('../../partials/admin-footer') %>

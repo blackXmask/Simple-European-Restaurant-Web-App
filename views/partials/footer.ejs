@@ -1,0 +1,75 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">
+          <i class="fas fa-utensils"></i>
+          La Maison Dorée
+        </div>
+        <p>Experience the timeless elegance of European cuisine. Since 1923, we have been crafting unforgettable dining experiences with passion, tradition, and the finest ingredients.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/menu">Our Menu</a></li>
+          <li><a href="/reviews">Reviews</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Opening Hours</h4>
+        <ul>
+          <li class="contact-item"><i class="far fa-clock"></i> Mon – Thu: 12:00 – 22:00</li>
+          <li class="contact-item"><i class="far fa-clock"></i> Fri – Sat: 12:00 – 23:30</li>
+          <li class="contact-item"><i class="far fa-clock"></i> Sunday: 12:00 – 21:00</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li class="contact-item"><i class="fas fa-map-marker-alt"></i> 24 Rue du Faubourg Saint-Honoré, 75008 Paris</li>
+          <li class="contact-item"><i class="fas fa-phone"></i> +33 1 42 36 87 09</li>
+          <li class="contact-item"><i class="fas fa-envelope"></i> contact@lamaisondoree.com</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 La Maison Dorée. All rights reserved. &middot; Crafted with <i class="fas fa-heart" style="color: var(--burgundy);"></i> in Paris</p>
+  </div>
+</footer>
+
+<% if (flash) { %>
+<div class="flash-container" id="flashContainer">
+  <div class="flash flash-<%= flash.type %>">
+    <i class="fas fa-<%= flash.type === 'success' ? 'check-circle' : 'exclamation-circle' %>"></i>
+    <span><%= flash.message %></span>
+    <span class="flash-close" onclick="document.getElementById('flashContainer').remove()"><i class="fas fa-times"></i></span>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+    var el = document.getElementById('flashContainer');
+    if (el) el.remove();
+  }, 5000);
+</script>
+<% } %>
+
+<script>
+  document.getElementById('navToggle')?.addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('active');
+  });
+</script>
+</body>
+</html>

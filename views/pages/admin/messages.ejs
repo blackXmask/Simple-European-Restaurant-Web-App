@@ -1,0 +1,39 @@
+<%- include('../../partials/admin-head') %>
+
+<div class="admin-header">
+  <h1>Contact Messages</h1>
+</div>
+
+<div class="admin-table-card">
+  <% if (messages.length === 0) { %>
+    <div style="text-align: center; padding: 48px; color: var(--gray);">
+      <i class="fas fa-envelope" style="font-size: 3rem; opacity: 0.3; margin-bottom: 12px;"></i>
+      <p>No messages yet.</p>
+    </div>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Subject</th>
+          <th>Message</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% messages.forEach(function(msg) { %>
+          <tr>
+            <td><strong><%= msg.name %></strong></td>
+            <td><a href="mailto:<%= msg.email %>" style="color: var(--burgundy);"><%= msg.email %></a></td>
+            <td><%= msg.subject %></td>
+            <td style="max-width: 300px; color: var(--gray); font-size: 0.85rem;"><%= msg.message %></td>
+            <td><%= new Date(msg.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('../../partials/admin-footer') %>

@@ -1,0 +1,53 @@
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="navbar-logo">
+      <i class="fas fa-utensils"></i>
+      <div>
+        La Maison Dorée
+        <span>Paris Est. 1923</span>
+      </div>
+    </a>
+
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="/" class="<%= typeof title !== 'undefined' && title === 'Home' ? 'active' : '' %>">Home</a></li>
+      <li><a href="/menu" class="<%= typeof title !== 'undefined' && title === 'Our Menu' ? 'active' : '' %>">Menu</a></li>
+      <li><a href="/reviews" class="<%= typeof title !== 'undefined' && title === 'Guest Reviews' ? 'active' : '' %>">Reviews</a></li>
+      <li><a href="/about" class="<%= typeof title !== 'undefined' && title === 'About Us' ? 'active' : '' %>">About</a></li>
+      <li><a href="/contact" class="<%= typeof title !== 'undefined' && title === 'Contact' ? 'active' : '' %>">Contact</a></li>
+    </ul>
+
+    <div class="navbar-right">
+      <a href="/cart" class="cart-link">
+        <i class="fas fa-shopping-bag"></i>
+        <% if (cartCount > 0) { %>
+          <span class="cart-badge"><%= cartCount %></span>
+        <% } %>
+      </a>
+
+      <% if (user) { %>
+        <div class="navbar-user dropdown">
+          <button class="dropdown-toggle">
+            <i class="fas fa-user-circle"></i>
+            <span><%= user.name.split(' ')[0] %></span>
+            <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="/auth/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="/orders"><i class="fas fa-receipt"></i> My Orders</a></li>
+            <li><a href="/reviews#write-review"><i class="fas fa-star"></i> Write Review</a></li>
+            <% if (user.role === 'admin') { %>
+              <li><a href="/admin"><i class="fas fa-cog"></i> Admin Panel</a></li>
+            <% } %>
+            <li><a href="/auth/logout"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+          </ul>
+        </div>
+      <% } else { %>
+        <a href="/auth/login" class="btn btn-outline btn-sm">Sign In</a>
+      <% } %>
+
+      <button class="navbar-toggle" id="navToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </div>
+</nav>

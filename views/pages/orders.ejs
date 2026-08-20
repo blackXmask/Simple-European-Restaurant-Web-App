@@ -1,0 +1,41 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<section class="dashboard-page">
+  <div class="container">
+    <div class="section-title" style="margin-bottom: 32px;">
+      <span class="subtitle">Order History</span>
+      <h2>My Orders</h2>
+      <div class="divider"></div>
+    </div>
+
+    <% if (orders.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-receipt"></i>
+        <h3>No Orders Yet</h3>
+        <p>You haven't placed any orders yet. Browse our menu and place your first order!</p>
+        <a href="/menu" class="btn btn-primary"><i class="fas fa-utensils"></i> Browse Menu</a>
+      </div>
+    <% } else { %>
+      <div class="dashboard-section">
+        <div class="order-list">
+          <% orders.forEach(function(order) { %>
+            <a href="/orders/<%= order.id %>" class="order-list-item" style="text-decoration: none; color: inherit;">
+              <div class="info">
+                <div class="order-num"><%= order.order_number %></div>
+                <div class="order-date"><%= new Date(order.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %> &middot; <%= order.delivery_type %></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <span class="status-badge status-<%= order.status %>"><%= order.status %></span>
+                <span class="order-total">&euro;<%= order.total %></span>
+                <i class="fas fa-chevron-right" style="color: var(--gray);"></i>
+              </div>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

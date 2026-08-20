@@ -1,0 +1,38 @@
+<%- include('../../partials/admin-head') %>
+
+<div class="admin-header">
+  <h1>User Management</h1>
+</div>
+
+<div class="admin-table-card">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Joined</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(function(u) { %>
+        <tr>
+          <td><strong><%= u.name %></strong></td>
+          <td><%= u.email %></td>
+          <td><%= u.phone || '—' %></td>
+          <td>
+            <% if (u.role === 'admin') { %>
+              <span class="status-badge status-approved"><i class="fas fa-shield-alt"></i> Admin</span>
+            <% } else { %>
+              <span class="status-badge status-pending">Customer</span>
+            <% } %>
+          </td>
+          <td><%= new Date(u.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../../partials/admin-footer') %>

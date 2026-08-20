@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+</head>
+<body>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="logo">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-utensils"></i>
+        <div>
+          <h3>La Maison Dorée</h3>
+          <span>Admin Panel</span>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/admin" class="<%= title === 'Admin Dashboard' ? 'active' : '' %>"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="/admin/menu" class="<%= title === 'Menu Management' ? 'active' : '' %>"><i class="fas fa-utensils"></i> Menu Items</a></li>
+        <li><a href="/admin/orders" class="<%= title === 'Order Management' ? 'active' : '' %>"><i class="fas fa-receipt"></i> Orders</a></li>
+        <li><a href="/admin/reviews" class="<%= title === 'Review Moderation' ? 'active' : '' %>"><i class="fas fa-star"></i> Reviews</a></li>
+        <li><a href="/admin/messages" class="<%= title === 'Messages' ? 'active' : '' %>"><i class="fas fa-envelope"></i> Messages</a></li>
+        <li><a href="/admin/users" class="<%= title === 'User Management' ? 'active' : '' %>"><i class="fas fa-users"></i> Users</a></li>
+      </ul>
+    </nav>
+    <div class="back-link">
+      <a href="/"><i class="fas fa-arrow-left"></i> Back to Website</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">

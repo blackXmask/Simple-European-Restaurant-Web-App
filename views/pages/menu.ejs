@@ -1,0 +1,65 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <span class="subtitle">Crafted with Passion</span>
+      <h2>Our Menu</h2>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="menu-filters">
+      <a href="/menu" class="menu-filter-btn <%= !activeCategory ? 'active' : '' %>">All</a>
+      <% categories.forEach(function(cat) { %>
+        <a href="/menu?category=<%= cat.slug %>" class="menu-filter-btn <%= activeCategory === cat.slug ? 'active' : '' %>">
+          <i class="fas <%= cat.icon %>"></i> <%= cat.name %>
+        </a>
+      <% }); %>
+    </div>
+
+    <% if (Object.keys(grouped).length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-utensils"></i>
+        <h3>No Items Found</h3>
+        <p>There are no menu items available in this category at the moment.</p>
+        <a href="/menu" class="btn btn-primary">View All Menu</a>
+      </div>
+    <% } else { %>
+      <% Object.values(grouped).forEach(function(catGroup) { %>
+        <div class="menu-section-title">
+          <h3><%= catGroup.name %></h3>
+          <div class="divider"></div>
+        </div>
+        <div class="menu-grid">
+          <% catGroup.items.forEach(function(item) { %>
+            <div class="menu-item-card">
+              <div class="menu-item-image">
+                <img src="<%= item.image_url %>" alt="<%= item.name %>" loading="lazy">
+                <% if (item.is_featured) { %>
+                  <span class="menu-item-badge"><i class="fas fa-star"></i> Featured</span>
+                <% } %>
+              </div>
+              <div class="menu-item-body">
+                <span class="category-tag"><%= item.category_name %></span>
+                <h4><%= item.name %></h4>
+                <p><%= item.description %></p>
+                <div class="menu-item-footer">
+                  <span class="menu-item-price"><span class="currency">&euro;</span><%= item.price.toFixed(2) %></span>
+                  <form action="/menu/cart/add" method="POST" class="menu-item-add-form">
+                    <input type="hidden" name="itemId" value="<%= item.id %>">
+                    <input type="number" name="quantity" value="1" min="1" max="10" class="menu-item-qty">
+                    <button type="submit" class="btn-add-cart"><i class="fas fa-plus"></i> Add</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% }); %>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

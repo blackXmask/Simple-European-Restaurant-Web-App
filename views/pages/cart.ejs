@@ -1,0 +1,73 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<section class="cart-page">
+  <div class="container">
+    <div class="section-title" style="margin-bottom: 32px;">
+      <span class="subtitle">Your Selection</span>
+      <h2>Your Order</h2>
+      <div class="divider"></div>
+    </div>
+
+    <% if (cart.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-shopping-bag"></i>
+        <h3>Your Order is Empty</h3>
+        <p>Browse our menu and add your favourite dishes to get started.</p>
+        <a href="/menu" class="btn btn-primary"><i class="fas fa-utensils"></i> Browse Menu</a>
+      </div>
+    <% } else { %>
+      <div class="cart-layout">
+        <div class="cart-items">
+          <% cart.forEach(function(item) { %>
+            <div class="cart-item">
+              <img src="<%= item.image_url %>" alt="<%= item.name %>">
+              <div class="item-info">
+                <h4><%= item.name %></h4>
+                <div class="item-price">&euro;<%= item.price.toFixed(2) %></div>
+              </div>
+              <div class="item-actions">
+                <form action="/menu/cart/update" method="POST" style="display: inline;">
+                  <input type="hidden" name="itemId" value="<%= item.id %>">
+                  <div class="qty-control">
+                    <button type="button" onclick="this.parentNode.querySelector('input').stepDown(); this.parentNode.parentNode.submit()"><i class="fas fa-minus"></i></button>
+                    <input type="number" name="quantity" value="<%= item.quantity %>" min="0" max="20" readonly>
+                    <button type="button" onclick="this.parentNode.querySelector('input').stepUp(); this.parentNode.parentNode.submit()"><i class="fas fa-plus"></i></button>
+                  </div>
+                </form>
+                <form action="/menu/cart/remove" method="POST" style="display: inline;">
+                  <input type="hidden" name="itemId" value="<%= item.id %>">
+                  <button type="submit" class="remove-btn" title="Remove"><i class="fas fa-trash-alt"></i></button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+
+        <div class="cart-summary">
+          <h3>Order Summary</h3>
+          <div class="summary-row">
+            <span class="label">Subtotal</span>
+            <span class="value">&euro;<%= subtotal %></span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Delivery Fee</span>
+            <span class="value">&euro;<%= deliveryFee %></span>
+          </div>
+          <div class="summary-total">
+            <span class="label">Total</span>
+            <span class="value">&euro;<%= total %></span>
+          </div>
+          <% if (user) { %>
+            <a href="/checkout" class="btn btn-primary btn-block btn-lg"><i class="fas fa-credit-card"></i> Proceed to Checkout</a>
+          <% } else { %>
+            <a href="/auth/login" class="btn btn-primary btn-block btn-lg"><i class="fas fa-sign-in-alt"></i> Sign In to Checkout</a>
+          <% } %>
+          <a href="/menu" class="btn btn-outline btn-block" style="margin-top: 8px;"><i class="fas fa-arrow-left"></i> Continue Browsing</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

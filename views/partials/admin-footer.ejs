@@ -1,0 +1,20 @@
+  </main>
+</div>
+
+<% if (flash) { %>
+<div class="flash-container" id="flashContainer">
+  <div class="flash flash-<%= flash.type %>">
+    <i class="fas fa-<%= flash.type === 'success' ? 'check-circle' : 'exclamation-circle' %>"></i>
+    <span><%= flash.message %></span>
+    <span class="flash-close" onclick="document.getElementById('flashContainer').remove()"><i class="fas fa-times"></i></span>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+    var el = document.getElementById('flashContainer');
+    if (el) el.remove();
+  }, 5000);
+</script>
+<% } %>
+</body>
+</html>

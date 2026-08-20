@@ -1,0 +1,159 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="subtitle">Paris Est. 1923</span>
+    <h1>La Maison Dorée</h1>
+    <p>Where European tradition meets culinary excellence. Savour authentic flavours from across the continent, crafted with passion and served with elegance.</p>
+    <div class="hero-buttons">
+      <a href="/menu" class="btn btn-gold btn-lg"><i class="fas fa-utensils"></i> Explore Menu</a>
+      <a href="/about" class="btn btn-outline-light btn-lg">Our Story</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-utensils"></i></div>
+        <div class="stat-value">100+</div>
+        <div class="stat-label">Years of Tradition</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-globe-europe"></i></div>
+        <div class="stat-value">12</div>
+        <div class="stat-label">European Cuisines</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-wine-glass-alt"></i></div>
+        <div class="stat-value">500+</div>
+        <div class="stat-label">Wine Selections</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-star"></i></div>
+        <div class="stat-value"><%= avgRating || '4.8' %></div>
+        <div class="stat-label">Guest Rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <span class="subtitle">Explore Our Kitchen</span>
+      <h2>Culinary Categories</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="category-grid">
+      <% const catImages = {
+        'antipasti': 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&q=80',
+        'mains': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80',
+        'desserts': 'https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=600&q=80',
+        'beverages': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80'
+      }; %>
+      <% categories.forEach(function(cat) { %>
+        <a href="/menu?category=<%= cat.slug %>" class="category-card">
+          <img src="<%= catImages[cat.slug] || 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' %>" alt="<%= cat.name %>">
+          <div class="overlay">
+            <i class="fas <%= cat.icon %>"></i>
+            <h3><%= cat.name %></h3>
+            <p><%= cat.description %></p>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Dishes -->
+<section class="section" style="background: var(--cream-dark);">
+  <div class="container">
+    <div class="section-title">
+      <span class="subtitle">Chef's Recommendations</span>
+      <h2>Featured Dishes</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="featured-grid">
+      <% featured.forEach(function(item) { %>
+        <div class="menu-item-card">
+          <div class="menu-item-image">
+            <img src="<%= item.image_url %>" alt="<%= item.name %>" loading="lazy">
+            <span class="menu-item-badge"><i class="fas fa-star"></i> Featured</span>
+          </div>
+          <div class="menu-item-body">
+            <span class="category-tag"><%= item.category_name %></span>
+            <h4><%= item.name %></h4>
+            <p><%= item.description %></p>
+            <div class="menu-item-footer">
+              <span class="menu-item-price"><span class="currency">&euro;</span><%= item.price.toFixed(2) %></span>
+              <form action="/menu/cart/add" method="POST" class="menu-item-add-form">
+                <input type="hidden" name="itemId" value="<%= item.id %>">
+                <input type="number" name="quantity" value="1" min="1" max="10" class="menu-item-qty">
+                <button type="submit" class="btn-add-cart"><i class="fas fa-plus"></i> Add</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="/menu" class="btn btn-outline btn-lg">View Full Menu <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- Reviews Preview -->
+<section class="section reviews-preview">
+  <div class="container">
+    <div class="section-title">
+      <span class="subtitle">What Our Guests Say</span>
+      <h2>Guest Experiences</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="featured-grid">
+      <% reviews.forEach(function(review) { %>
+        <div class="review-card">
+          <div class="stars">
+            <% for (let i = 1; i <= 5; i++) { %>
+              <i class="fa<%= i <= review.rating ? 's' : 'r' %> fa-star"></i>
+            <% } %>
+          </div>
+          <h4 class="review-title"><%= review.title || 'Wonderful Experience' %></h4>
+          <p class="review-text">"<%= review.comment %>"</p>
+          <div class="review-author">
+            <div class="avatar"><%= review.user_name.charAt(0) %></div>
+            <div>
+              <div class="name"><%= review.user_name %></div>
+              <div class="date"><%= new Date(review.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %></div>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="/reviews" class="btn btn-outline btn-lg">Read All Reviews <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="background: var(--burgundy); color: var(--white); text-align: center;">
+  <div class="container">
+    <h2 style="color: var(--white); font-size: 2.5rem; margin-bottom: 16px;">Reserve Your Table Tonight</h2>
+    <p style="font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto 32px;">Order online or visit us at our historic Parisian location. We look forward to serving you an unforgettable European dining experience.</p>
+    <div class="hero-buttons" style="justify-content: center;">
+      <a href="/menu" class="btn btn-gold btn-lg"><i class="fas fa-shopping-bag"></i> Order Online</a>
+      <a href="/contact" class="btn btn-outline-light btn-lg"><i class="fas fa-phone"></i> Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

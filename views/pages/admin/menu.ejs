@@ -1,0 +1,62 @@
+<%- include('../../partials/admin-head') %>
+
+<div class="admin-header">
+  <h1>Menu Management</h1>
+  <a href="/admin/menu/new" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Item</a>
+</div>
+
+<div class="admin-table-card">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Featured</th>
+        <th>Available</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% items.forEach(function(item) { %>
+        <tr>
+          <td>
+            <div class="item-name-cell">
+              <img src="<%= item.image_url || 'https://via.placeholder.com/50' %>" alt="<%= item.name %>" class="thumb">
+              <div>
+                <strong><%= item.name %></strong>
+                <div style="font-size: 0.8rem; color: var(--gray);"><%= (item.description || '').substring(0, 60) %><%= item.description && item.description.length > 60 ? '...' : '' %></div>
+              </div>
+            </div>
+          </td>
+          <td><%= item.category_name %></td>
+          <td><strong>&euro;<%= item.price.toFixed(2) %></strong></td>
+          <td>
+            <% if (item.is_featured) { %>
+              <span class="status-badge status-approved"><i class="fas fa-star"></i> Yes</span>
+            <% } else { %>
+              <span style="color: var(--gray);">No</span>
+            <% } %>
+          </td>
+          <td>
+            <% if (item.is_available) { %>
+              <span class="status-badge status-delivered"><i class="fas fa-check"></i> Available</span>
+            <% } else { %>
+              <span class="status-badge status-cancelled"><i class="fas fa-times"></i> Hidden</span>
+            <% } %>
+          </td>
+          <td>
+            <div class="admin-action-btns">
+              <a href="/admin/menu/<%= item.id %>/edit" class="action-btn action-btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+              <form action="/admin/menu/<%= item.id %>?_method=DELETE" method="POST" style="display: inline;" onsubmit="return confirm('Delete this menu item?')">
+                <button type="submit" class="action-btn action-btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../../partials/admin-footer') %>

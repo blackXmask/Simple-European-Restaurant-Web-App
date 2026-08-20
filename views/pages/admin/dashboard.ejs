@@ -1,0 +1,90 @@
+<%- include('../../partials/admin-head') %>
+
+<div class="admin-header">
+  <h1>Dashboard Overview</h1>
+  <a href="/admin/menu/new" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Menu Item</a>
+</div>
+
+<!-- Stats -->
+<div class="admin-stats-grid">
+  <div class="admin-stat-card">
+    <div class="stat-icon-box icon-bg-burgundy"><i class="fas fa-receipt"></i></div>
+    <div class="stat-value"><%= totalOrders %></div>
+    <div class="stat-label">Total Orders</div>
+  </div>
+  <div class="admin-stat-card">
+    <div class="stat-icon-box icon-bg-gold"><i class="fas fa-euro-sign"></i></div>
+    <div class="stat-value"><%= totalRevenue %></div>
+    <div class="stat-label">Total Revenue</div>
+  </div>
+  <div class="admin-stat-card">
+    <div class="stat-icon-box icon-bg-green"><i class="fas fa-users"></i></div>
+    <div class="stat-value"><%= totalUsers %></div>
+    <div class="stat-label">Customers</div>
+  </div>
+  <div class="admin-stat-card">
+    <div class="stat-icon-box icon-bg-red"><i class="fas fa-clock"></i></div>
+    <div class="stat-value"><%= pendingOrders %></div>
+    <div class="stat-label">Pending Orders</div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="admin-stats-grid" style="margin-bottom: 32px;">
+  <div class="admin-stat-card">
+    <div class="stat-icon-box icon-bg-burgundy"><i class="fas fa-utensils"></i></div>
+    <div class="stat-value"><%= totalMenuItems %></div>
+    <div class="stat-label">Menu Items</div>
+  </div>
+  <div class="admin-stat-card">
+    <div class="stat-icon-box icon-bg-gold"><i class="fas fa-star"></i></div>
+    <div class="stat-value"><%= pendingReviews %></div>
+    <div class="stat-label">Pending Reviews</div>
+  </div>
+  <div class="admin-stat-card">
+    <div class="stat-icon-box icon-bg-green"><i class="fas fa-envelope"></i></div>
+    <div class="stat-value"><%= unreadMessages %></div>
+    <div class="stat-label">Messages</div>
+  </div>
+  <div class="admin-stat-card" style="display: flex; align-items: center; justify-content: center;">
+    <a href="/admin/orders" class="btn btn-primary btn-sm"><i class="fas fa-receipt"></i> Manage Orders</a>
+  </div>
+</div>
+
+<!-- Recent Orders -->
+<div class="admin-table-card">
+  <div class="card-header">
+    <h3><i class="fas fa-clock"></i> Recent Orders</h3>
+    <a href="/admin/orders" class="btn btn-outline btn-sm">View All</a>
+  </div>
+  <% if (recentOrders.length === 0) { %>
+    <div style="text-align: center; padding: 32px; color: var(--gray);">No orders yet.</div>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Customer</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% recentOrders.forEach(function(order) { %>
+          <tr>
+            <td><strong><%= order.order_number %></strong></td>
+            <td><%= order.customer_name %></td>
+            <td>&euro;<%= order.total %></td>
+            <td><span class="status-badge status-<%= order.status %>"><%= order.status %></span></td>
+            <td><%= new Date(order.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) %></td>
+            <td><a href="/admin/orders/<%= order.id %>" class="btn btn-outline btn-sm">View</a></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('../../partials/admin-footer') %>

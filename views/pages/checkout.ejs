@@ -1,0 +1,89 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<section class="checkout-page">
+  <div class="container">
+    <div class="section-title" style="margin-bottom: 32px;">
+      <span class="subtitle">Almost There</span>
+      <h2>Checkout</h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="checkout-layout">
+      <div class="checkout-form-card">
+        <h3><i class="fas fa-user-circle"></i> Contact Information</h3>
+        <form action="/checkout" method="POST">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" name="name" class="form-control" value="<%= user.name %>" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" class="form-control" value="<%= user.phone || '' %>" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="email" class="form-control" value="<%= user.email %>" required>
+          </div>
+
+          <h3 style="margin-top: 28px;"><i class="fas fa-truck"></i> Delivery Options</h3>
+          <div class="delivery-type-tabs">
+            <div class="delivery-type-tab active" onclick="selectDelivery('delivery')"><i class="fas fa-truck"></i> Delivery</div>
+            <div class="delivery-type-tab" onclick="selectDelivery('pickup')"><i class="fas fa-store"></i> Pickup</div>
+          </div>
+          <input type="hidden" name="deliveryType" id="deliveryType" value="delivery">
+
+          <div id="deliveryAddressField" class="form-group">
+            <label>Delivery Address</label>
+            <textarea name="address" class="form-control" placeholder="Street address, apartment number, city, postal code"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Order Notes (Optional)</label>
+            <textarea name="notes" class="form-control" placeholder="Special dietary requirements, allergies, delivery instructions..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg"><i class="fas fa-check-circle"></i> Place Order — &euro;<%= total %></button>
+        </form>
+      </div>
+
+      <div class="order-summary-card">
+        <h3>Order Summary</h3>
+        <% cart.forEach(function(item) { %>
+          <div class="order-summary-item">
+            <span class="name"><%= item.name %></span>
+            <span class="qty">x<%= item.quantity %></span>
+            <span class="price">&euro;<%= (item.price * item.quantity).toFixed(2) %></span>
+          </div>
+        <% }); %>
+        <div style="border-top: 2px solid var(--gray-lighter); margin-top: 16px; padding-top: 16px;">
+          <div class="summary-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="color: var(--gray);">Subtotal</span>
+            <span style="font-weight: 600;">&euro;<%= subtotal %></span>
+          </div>
+          <div class="summary-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="color: var(--gray);">Delivery Fee</span>
+            <span style="font-weight: 600;">&euro;<%= deliveryFee %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 2px solid var(--gray-lighter);">
+            <span style="font-family: 'Playfair Display', serif; font-size: 1.2rem;">Total</span>
+            <span style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--burgundy);">&euro;<%= total %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function selectDelivery(type) {
+  document.querySelectorAll('.delivery-type-tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('deliveryType').value = type;
+  document.getElementById('deliveryAddressField').style.display = type === 'pickup' ? 'none' : 'block';
+}
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,86 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<section class="dashboard-page">
+  <div class="container">
+    <div class="section-title" style="margin-bottom: 32px;">
+      <span class="subtitle">Welcome Back</span>
+      <h2>My Account</h2>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="dashboard-grid">
+      <div class="dashboard-stat">
+        <i class="fas fa-receipt"></i>
+        <div class="value"><%= totalOrders %></div>
+        <div class="label">Total Orders</div>
+      </div>
+      <div class="dashboard-stat">
+        <i class="fas fa-euro-sign"></i>
+        <div class="value">&euro;<%= totalSpent %></div>
+        <div class="label">Total Spent</div>
+      </div>
+      <div class="dashboard-stat">
+        <i class="fas fa-star"></i>
+        <div class="value"><%= reviews.length %></div>
+        <div class="label">Reviews Written</div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="dashboard-section">
+      <h3><i class="fas fa-receipt"></i> Recent Orders</h3>
+      <% if (orders.length === 0) { %>
+        <p style="color: var(--gray); text-align: center; padding: 24px;">You haven't placed any orders yet. <a href="/menu" style="color: var(--burgundy); font-weight: 700;">Browse the menu</a> to get started.</p>
+      <% } else { %>
+        <div class="order-list">
+          <% orders.slice(0, 5).forEach(function(order) { %>
+            <a href="/orders/<%= order.id %>" class="order-list-item" style="text-decoration: none; color: inherit;">
+              <div class="info">
+                <div class="order-num"><%= order.order_number %></div>
+                <div class="order-date"><%= new Date(order.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <span class="status-badge status-<%= order.status %>"><%= order.status %></span>
+                <span class="order-total">&euro;<%= order.total %></span>
+              </div>
+            </a>
+          <% }); %>
+        </div>
+        <% if (orders.length > 5) { %>
+          <div style="text-align: center; margin-top: 16px;">
+            <a href="/orders" class="btn btn-outline btn-sm">View All Orders</a>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+
+    <!-- My Reviews -->
+    <div class="dashboard-section">
+      <h3><i class="fas fa-star"></i> My Reviews</h3>
+      <% if (reviews.length === 0) { %>
+        <p style="color: var(--gray); text-align: center; padding: 24px;">You haven't written any reviews yet. <a href="/reviews#write-review" style="color: var(--burgundy); font-weight: 700;">Write your first review</a>.</p>
+      <% } else { %>
+        <div class="order-list">
+          <% reviews.forEach(function(review) { %>
+            <div class="order-list-item">
+              <div class="info">
+                <div class="order-num"><%= review.title || 'Review' %></div>
+                <div class="order-date">
+                  <span class="stars-readonly">
+                    <% for (let i = 1; i <= 5; i++) { %><%= i <= review.rating ? '★' : '☆' %><% } %>
+                  </span>
+                  &middot; <%= new Date(review.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                </div>
+              </div>
+              <span class="status-badge status-<%= review.status %>"><%= review.status %></span>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

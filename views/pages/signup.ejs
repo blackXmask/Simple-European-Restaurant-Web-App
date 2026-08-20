@@ -1,0 +1,55 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="logo-center">
+      <i class="fas fa-utensils"></i>
+      <h2>Join La Maison Dorée</h2>
+      <p>Create an account to order online and share your experiences</p>
+    </div>
+
+    <% if (errors && errors.length > 0) { %>
+      <div class="form-error">
+        <ul>
+          <% errors.forEach(function(err) { %>
+            <li><%= err %></li>
+          <% }); %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="/auth/signup" method="POST">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" class="form-control" value="<%= old.name || '' %>" placeholder="Jean Dupont" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" class="form-control" value="<%= old.email || '' %>" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Phone Number (Optional)</label>
+        <input type="tel" name="phone" class="form-control" value="<%= old.phone || '' %>" placeholder="+33 6 12 34 56 78">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Min. 6 characters" required>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" name="confirmPassword" class="form-control" placeholder="Repeat password" required>
+        </div>
+      </div>
+      <p class="form-hint">Your password is securely hashed with bcrypt. We never store plaintext passwords.</p>
+      <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 12px;"><i class="fas fa-user-plus"></i> Create Account</button>
+    </form>
+
+    <div class="form-footer">
+      Already have an account? <a href="/auth/login">Sign in</a>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

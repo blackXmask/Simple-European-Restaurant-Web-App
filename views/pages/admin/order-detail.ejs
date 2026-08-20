@@ -1,0 +1,87 @@
+<%- include('../../partials/admin-head') %>
+
+<div class="admin-header">
+  <h1>Order <%= order.order_number %></h1>
+  <a href="/admin/orders" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Back to Orders</a>
+</div>
+
+<div class="admin-table-card" style="padding: 28px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--gray-lighter);">
+    <div>
+      <h3 style="color: var(--burgundy);"><%= order.order_number %></h3>
+      <p style="color: var(--gray); font-size: 0.9rem;"><%= new Date(order.created_at).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <span class="status-badge status-<%= order.status %>"><%= order.status %></span>
+      <form action="/admin/orders/<%= order.id %>/status?_method=PUT" method="POST" style="display: inline;">
+        <select name="status" onchange="this.form.submit()" class="form-control" style="width: auto; display: inline-block; padding: 8px 12px;">
+          <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+          <option value="preparing" <%= order.status === 'preparing' ? 'selected' : '' %>>Preparing</option>
+          <option value="ready" <%= order.status === 'ready' ? 'selected' : '' %>>Ready</option>
+          <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+          <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+    <div>
+      <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px;">Customer</div>
+      <div style="font-weight: 600;"><%= order.customer_name %></div>
+    </div>
+    <div>
+      <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px;">Phone</div>
+      <div style="font-weight: 600;"><%= order.customer_phone %></div>
+    </div>
+    <div>
+      <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px;">Email</div>
+      <div style="font-weight: 600;"><%= order.customer_email %></div>
+    </div>
+    <div>
+      <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px;">Delivery Type</div>
+      <div style="font-weight: 600;"><%= order.delivery_type === 'pickup' ? 'Pickup' : 'Delivery' %></div>
+    </div>
+    <% if (order.delivery_address) { %>
+      <div style="grid-column: span 2;">
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px;">Delivery Address</div>
+        <div style="font-weight: 600;"><%= order.delivery_address %></div>
+      </div>
+    <% } %>
+    <% if (order.notes) { %>
+      <div style="grid-column: span 2;">
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px;">Order Notes</div>
+        <div style="font-weight: 600;"><%= order.notes %></div>
+      </div>
+    <% } %>
+  </div>
+
+  <table class="order-items-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th style="text-align: center;">Qty</th>
+        <th style="text-align: right;">Price</th>
+        <th style="text-align: right;">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% items.forEach(function(item) { %>
+        <tr>
+          <td><%= item.name %></td>
+          <td style="text-align: center;"><%= item.quantity %></td>
+          <td style="text-align: right;">&euro;<%= item.price.toFixed(2) %></td>
+          <td class="item-total">&euro;<%= (item.price * item.quantity).toFixed(2) %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3" style="text-align: right; padding-top: 16px; font-weight: 700; border-top: 2px solid var(--gray-lighter);">Total</td>
+        <td style="text-align: right; padding-top: 16px; font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--burgundy); border-top: 2px solid var(--gray-lighter);">&euro;<%= order.total %></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<%- include('../../partials/admin-footer') %>
