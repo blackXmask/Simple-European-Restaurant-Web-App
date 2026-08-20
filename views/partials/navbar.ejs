@@ -27,7 +27,11 @@
       <% if (user) { %>
         <div class="navbar-user dropdown">
           <button class="dropdown-toggle">
-            <i class="fas fa-user-circle"></i>
+            <% if (user.role === 'admin') { %>
+              <i class="fas fa-user-shield"></i>
+            <% } else { %>
+              <i class="fas fa-user-circle"></i>
+            <% } %>
             <span><%= user.name.split(' ')[0] %></span>
             <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i>
           </button>

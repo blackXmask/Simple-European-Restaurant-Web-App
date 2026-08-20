@@ -561,7 +561,10 @@ img { max-width: 100%; display: block; }
   background: var(--burgundy); color: var(--white);
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-size: 1.1rem; font-family: 'Playfair Display', serif;
+  flex-shrink: 0; overflow: hidden;
 }
+.avatar-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--gold); }
+.review-item-card .avatar-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--gold); }
 .review-card .review-author .name { font-weight: 700; font-size: 0.95rem; }
 .review-card .review-author .date { font-size: 0.8rem; color: var(--gray); }
 

@@ -54,14 +54,14 @@
     </div>
     <div class="category-grid">
       <% const catImages = {
-        'antipasti': 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&q=80',
+        'antipasti': 'https://images.unsplash.com/photo-1506280754576-f6fa8a873519?w=600&q=80',
         'mains': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80',
         'desserts': 'https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=600&q=80',
         'beverages': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80'
       }; %>
       <% categories.forEach(function(cat) { %>
         <a href="/menu?category=<%= cat.slug %>" class="category-card">
-          <img src="<%= catImages[cat.slug] || 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' %>" alt="<%= cat.name %>">
+          <img src="<%= catImages[cat.slug] %>" alt="<%= cat.name %>" onerror="this.src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80'">
           <div class="overlay">
             <i class="fas <%= cat.icon %>"></i>
             <h3><%= cat.name %></h3>
@@ -85,7 +85,7 @@
       <% featured.forEach(function(item) { %>
         <div class="menu-item-card">
           <div class="menu-item-image">
-            <img src="<%= item.image_url %>" alt="<%= item.name %>" loading="lazy">
+            <img src="<%= item.image_url %>" alt="<%= item.name %>" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80'">
             <span class="menu-item-badge"><i class="fas fa-star"></i> Featured</span>
           </div>
           <div class="menu-item-body">
@@ -129,7 +129,12 @@
           <h4 class="review-title"><%= review.title || 'Wonderful Experience' %></h4>
           <p class="review-text">"<%= review.comment %>"</p>
           <div class="review-author">
-            <div class="avatar"><%= review.user_name.charAt(0) %></div>
+            <% if (review.avatar_url) { %>
+              <img src="<%= review.avatar_url %>" alt="<%= review.user_name %>" class="avatar avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+              <div class="avatar" style="display:none;"><%= review.user_name.charAt(0) %></div>
+            <% } else { %>
+              <div class="avatar"><%= review.user_name.charAt(0) %></div>
+            <% } %>
             <div>
               <div class="name"><%= review.user_name %></div>
               <div class="date"><%= new Date(review.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %></div>
