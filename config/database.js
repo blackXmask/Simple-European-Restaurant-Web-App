@@ -127,6 +127,14 @@ async function initDatabase() {
     )`,
   ]);
 
+  // ── Migration: add avatar_url column to reviews if missing ──
+  try {
+    await db.execute('ALTER TABLE reviews ADD COLUMN avatar_url TEXT');
+    console.log('[DB] Migration: added avatar_url column to reviews');
+  } catch (e) {
+    // Column already exists — expected
+  }
+
   // ── Seed Admin ─────────────────────────────────────────
   const adminEmail = process.env.ADMIN_EMAIL || 'admin@lamaisondoree.com';
   const adminPass = process.env.ADMIN_PASSWORD || 'admin123';
