@@ -1,6 +1,6 @@
 const express = require('express');
 const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
+const MemoryStore = require('memorystore')(session);
 const methodOverride = require('method-override');
 const path = require('path');
 require('dotenv').config();
@@ -10,9 +10,11 @@ const { initDatabase } = require('./config/database');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ── Database ──────────────────────────────────────────────
-const db = initDatabase();
-app.locals.db = db;
+// ── Database (async init) ─────────────────────────────────
+let dbReady = false;
+initDatabase().then(() => { dbReady = true; }).catch(err => {
+  console.error('[DB] Init failed:', err.message);
+});
 
 // ── View Engine ────────────────────────────────────────────
 app.set('view engine', 'ejs');
@@ -24,15 +26,15 @@ app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Session
+// Session (memory store — works on Vercel serverless)
 app.use(session({
-  store: new SQLiteStore({ db: 'sessions.db', dir: path.join(__dirname, 'data') }),
+  store: new MemoryStore({ checkPeriod: 86400000 }),
   secret: process.env.SESSION_SECRET || 'fallback-dev-secret-change-me',
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    maxAge: 24 * 60 * 60 * 1000,
     sameSite: 'lax',
   },
 }));
@@ -51,6 +53,14 @@ app.use((req, res, next) => {
   };
   res.locals.flash = req.session.flash || null;
   req.session.flash = null;
+  next();
+});
+
+// ── DB readiness guard ────────────────────────────────────
+app.use((req, res, next) => {
+  if (!dbReady) {
+    return res.status(503).send('Database is initializing, please try again in a moment.');
+  }
   next();
 });
 
@@ -86,7 +96,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n  La Maison Dorée — running on http://localhost:${PORT}`);
-  console.log(`  Admin login: ${process.env.ADMIN_EMAIL || 'admin@lamaisondoree.com'} / ${process.env.ADMIN_PASSWORD || 'admin123'}\n`);
-});
+// ── Export for Vercel ─────────────────────────────────────
+module.exports = app;
+
+// ── Start server (local only) ────────────────────────────
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n  La Maison Dorée — running on http://localhost:${PORT}`);
+    console.log(`  Admin login: ${process.env.ADMIN_EMAIL || 'admin@lamaisondoree.com'} / ${process.env.ADMIN_PASSWORD || 'admin123'}\n`);
+  });
+}
